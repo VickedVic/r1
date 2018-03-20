@@ -1,0 +1,113 @@
+Development Setup Notes (for windows)
+
+=====================================
+
+The following are some useful notes for setting up an environment to work on coala.
+
+Virtualenv
+We highly recommend installing coala in a virtualenv for development. 
+This will allow you to have a contained environment in which to modify coala, separate from any other installation of coala that you may not want to break. 
+Here we will be showing how to have a virtualenv using venv and virtualenv. 
+We recommend using venv as it is part of the standard library and requires no extra installation. However, you can use whichever you find suitable to yourself.
+
+Make sure to have Python 3 installed in your local machine.
+
+Setting up virtualenv with foo and activating scripts:
+
+C:\> cd working_dir #move into the dir where you want to create coala-venev
+
+In a newly created virtualevn there will also be an active shell script. For Windows systems, activation scripts are provided for the Command Prompt and Powershell.
+Based on your active shell(CMD.exe or Powershell.exe), Windows will use either activate.bat or activate.ps1 (as appropriate) to activate the virtual envireonment.
+
+C:\Path\to\your\directory>virtualenv .\foo
+Using base prefix 'c:\\Path\\to\\appdata\\local\\programs\\python\\python36-32'
+New python executable in C:\Path\to\your\directory\foo\Scripts\python.exe
+Installing setuptools, pip, wheel...done.
+
+C:\Path\to\your\directory> .\foo\scripts\activate
+
+
+
+If using Powershell, see the notes about code signing below.
+
+Note:
+If using Powershell, the activate script is subject to the execution policies on the system. 
+By default on Windows 7, the system’s excution policy is set to Restricted, meaning no scripts like the activate script are allowed to be executed. 
+But that can’t stop us from changing that slightly to allow it to be executed.
+
+In order to use the script, you can relax your system’s execution policy to AllSigned, meaning all scripts on the system must be digitally signed to be executed. 
+Since the virtualenv activation script is signed by one of the authors (Jannis Leidel) this level of the execution policy suffices. As an administrator run:
+
+PS C:\> Set-ExecutionPolicy AllSigned
+Then you’ll be asked to trust the signer, when executing the script. You will be prompted with the following:
+
+PS C:\> virtualenv .\foo
+New python executable in C:\foo\Scripts\python.exe
+Installing setuptools................done.
+Installing pip...................done.
+PS C:\> .\foo\scripts\activate
+
+Do you want to run software from this untrusted publisher?
+File C:\foo\scripts\activate.ps1 is published by E=jannis@leidel.info,
+CN=Jannis Leidel, L=Berlin, S=Berlin, C=DE, Description=581796-Gh7xfJxkxQSIO4E0
+and is not trusted on your system. Only run scripts from trusted publishers.
+[V] Never run  [D] Do not run  [R] Run once  [A] Always run  [?] Help
+(default is "D"):A
+(foo) PS C:\>
+If you select [A] Always Run, the certificate will be added to the Trusted Publishers of your user account, and will be trusted in this user’s context henceforth. 
+If you select [R] Run Once, the script will be run, but you will be prompted on a subsequent invocation. 
+Advanced users can add the signer’s certificate to the Trusted Publishers of the Computer account to apply to all users (though this technique is out of scope of this document).
+
+Alternatively, you may relax the system execution policy to allow running of local scripts without verifying the code signature using the following:
+
+PS C:\> Set-ExecutionPolicy RemoteSigned
+Since the activate.ps1 script is generated locally for each virtualenv, it is not considered a remote script and can then be executed.
+
+To deactivate, simply type:
+(foo)C:\Path\to\your\directory> deactivate
+C:\Path\to\your\directory>
+
+After this, you can start installing from git.
+
+-------
+
+
+Repositories
+If you are interested in contributing to coala, we recommend that you read our newcomers’ guide to familiarize yourself with our workflow, and perhaps with GitHub itself.
+
+You will most likely need to work only in the coala or coala-bears repository. The former is the core of coala, and the latter contains the set of standard bears. 
+You can fork and clone the repositories from:
+
+https://github.com/coala/coala
+
+https://github.com/coala/coala-bears
+
+Beside those repositories above, package_manager and coala-utils are fundamental parts of coala which is hosted on GitLab.
+
+https://gitlab.com/coala/package_manager/
+
+https://gitlab.com/coala/coala-utils/
+
+
+-------
+
+Installing from Git
+We recommend first installing the latest development snapshot of coala’s master branch from and all of its dependencies with pip or pip3 using.
+Observe that both pip and pip3 work here, either can be used.
+
+(foo)C:\Path\to\your\directory>
+(foo)C:\Path\to\your\directory> git clone https://github.com/coala/coala
+(foo)C:\Path\to\your\directory> cd coala
+(foo)C:\Path\to\your\directory> pip3 install .
+(foo)C:\Path\to\your\directory> cd..
+(foo)C:\Path\to\your\directory> git clone https://github.com/coala/coala-bears
+(foo)C:\Path\to\your\directory> cd coala-bears
+(foo)C:\Path\to\your\directory> pip3 install .
+
+Once you have forked the repository you would like to modify, you can install a repository-backed version of the repository using
+
+(foo)C:\> cd <path\to\forked\repository>
+(foo)C:\Path\to\forked\repository> pip3 install .
+
+You will then be able to edit the repository and have the changes take effect in your virtualenv immediately. 
+You will also be able to use pip3 to manage your installation of the package should you need to install from a different source in the future.
